@@ -1,11 +1,98 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from "next/image";
 import Link from "next/link";
-import { FiArrowRight, FiCheck, FiClock, FiUsers, FiAward } from "react-icons/fi";
+import { FiArrowRight, FiCheck, FiClock, FiUsers, FiAward, FiLogIn } from "react-icons/fi";
 import { Button } from "@/components/ui/Button";
+import { isAuthenticated, subscribeToAuth, getAuthState } from '@/lib/auth';
 
 export default function Home() {
+  const router = useRouter();
+  const [authState, setAuthState] = useState({ isAuthenticated: false, loading: true });
+  
+  useEffect(() => {
+    // Subscribe to auth state changes
+    const unsubscribe = subscribeToAuth((state) => {
+      setAuthState({
+        isAuthenticated: state.isAuthenticated,
+        loading: state.loading
+      });
+    });
+    
+    // Initial auth check
+    const currentState = getAuthState();
+    setAuthState({
+      isAuthenticated: currentState.isAuthenticated,
+      loading: currentState.loading
+    });
+    
+    return () => {
+      // Cleanup subscription on unmount
+      unsubscribe();
+    };
+  }, []);
+  
+  // Redirect authenticated users to dashboard if they access the home page
+  useEffect(() => {
+    if (authState.isAuthenticated && !authState.loading) {
+      router.push('/dashboard');
+    }
+  }, [authState.isAuthenticated, authState.loading, router]);
+  
+  // Show loading state
+  if (authState.loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+      </div>
+    );
+  }
+  
+  // If user is authenticated, they'll be redirected, but we'll show a loading state
+  if (authState.isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        <p className="ml-3 text-gray-600">Redirecting to dashboard...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Navigation */}
+      <header className="bg-white dark:bg-gray-800 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <Link href="/" className="flex-shrink-0 flex items-center">
+                <Image
+                  src="/logo.png"
+                  alt="SkillVerse Logo"
+                  width={120}
+                  height={48}
+                  className="object-contain"
+                />
+              </Link>
+            </div>
+            <div className="flex items-center space-x-4">
+              <Link href="/how-it-works" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">
+                How It Works
+              </Link>
+              <Link 
+                href="/login"
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                <FiLogIn className="mr-2 -ml-1 h-5 w-5" />
+                Sign In
+              </Link>
+            </div>
+          </div>
+        </div>
+      </header>
+      
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 -z-10"></div>
@@ -22,16 +109,18 @@ export default function Home() {
                 Join SKILLVERSE, a community where verified experts teach their skills and earn time credits. Learn from others, share your expertise, and grow together.  
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <Button variant="gradient" size="lg">
-                  <Link href="/register" className="flex items-center">
-                    Get Started <FiArrowRight className="ml-2" />
-                  </Link>
-                </Button>
-                <Button variant="outline" size="lg">
-                  <Link href="/about" className="flex items-center">
-                    How It Works
-                  </Link>
-                </Button>
+                <Link 
+                  href="/register" 
+                  className="inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Get Started <FiArrowRight className="ml-2" />
+                </Link>
+                <Link 
+                  href="/how-it-works" 
+                  className="inline-flex items-center px-6 py-3 border border-gray-300 rounded-md shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  How It Works
+                </Link>
               </div>
             </div>
             <div className="flex-1 relative">
