@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00FFFF" />
+      <stop offset="100%" stop-color="#0080FF" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="800" fill="#000B1E" />
+  <g transform="translate(130, 185)">
+    <!-- Computer/Device -->
+    <path d="M100,200 L100,50 L300,50 L300,200 L350,200 L350,300 L50,300 L50,200 Z" stroke="url(#logoGradient)" stroke-width="10" fill="none" />
+    <!-- Phone -->
+    <rect x="120" y="220" width="60" height="120" rx="10" stroke="url(#logoGradient)" stroke-width="10" fill="none" />
+    <circle cx="150" cy="310" r="5" fill="url(#logoGradient)" />
+    <line x1="135" y1="240" x2="165" y2="240" stroke="url(#logoGradient)" stroke-width="5" />
+    <!-- Globe -->
+    <circle cx="450" cy="150" r="100" stroke="url(#logoGradient)" stroke-width="10" fill="none" />
+    <ellipse cx="450" cy="150" rx="100" ry="50" stroke="url(#logoGradient)" stroke-width="10" fill="none" />
+    <line x1="350" y1="150" x2="550" y2="150" stroke="url(#logoGradient)" stroke-width="10" />
+    <line x1="450" y1="50" x2="450" y2="250" stroke="url(#logoGradient)" stroke-width="10" />
+    <!-- Decorative elements -->
+    <circle cx="225" cy="400" r="15" stroke="url(#logoGradient)" stroke-width="5" fill="none" />
+    <circle cx="760" cy="150" r="10" fill="url(#logoGradient)" />
+    <circle cx="425" cy="20" r="10" fill="url(#logoGradient)" />
+    <path d="M600,400 L620,430 L580,430 Z" fill="url(#logoGradient)" />
+    <path d="M350,100 L370,100 L370,120 L350,120 Z" stroke="url(#logoGradient)" stroke-width="5" fill="none" />
+  </g>
+  <!-- Text -->
+  <text x="400" y="650" font-family="Arial, sans-serif" font-size="120" font-weight="bold" text-anchor="middle" fill="url(#logoGradient)">SkillVerse</text>
+</svg>

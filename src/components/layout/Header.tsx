@@ -181,9 +181,14 @@ const Header = () => {
                 </Link>
                 <Link
                   href="/register"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center"
                 >
-                  Sign up
+                  <img 
+                    src="/skillverse-logo.svg" 
+                    alt="SkillVerse Logo" 
+                    className="h-5 w-5 mr-2"
+                  />
+                  Get Started
                 </Link>
               </div>
             )}
@@ -247,7 +252,12 @@ const Header = () => {
                   className="block px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white hover:bg-blue-700"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Sign up
+                  <img 
+                    src="/skillverse-logo.svg" 
+                    alt="SkillVerse Logo" 
+                    className="h-5 w-5 mr-2"
+                  />
+                  Get Started
                 </Link>
               </>
             )}
