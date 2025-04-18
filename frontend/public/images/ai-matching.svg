@@ -1,0 +1,25 @@
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2563EB;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="#F9FAFB" />
+  <g transform="translate(50, 50)">
+    <rect x="0" y="0" width="500" height="300" rx="20" fill="white" stroke="#E5E7EB" stroke-width="2" />
+    <g transform="translate(50, 50)">
+      <circle cx="75" cy="75" r="50" fill="url(#grad1)" />
+      <text x="75" y="85" font-family="Arial" font-size="24" fill="white" text-anchor="middle">AI</text>
+      <line x1="150" y1="75" x2="300" y2="75" stroke="#6B7280" stroke-width="3" />
+      <circle cx="350" cy="75" r="50" fill="url(#grad2)" />
+      <text x="350" y="85" font-family="Arial" font-size="24" fill="white" text-anchor="middle">You</text>
+      <text x="200" y="150" font-family="Arial" font-size="18" fill="#4B5563" text-anchor="middle">Smart Skill Matching</text>
+      <text x="200" y="180" font-family="Arial" font-size="16" fill="#6B7280" text-anchor="middle">AI helps you find the perfect learning match</text>
+    </g>
+  </g>
+</svg>
