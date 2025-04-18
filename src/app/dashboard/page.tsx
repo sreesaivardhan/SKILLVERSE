@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import axiosInstance from '@/lib/api/axios';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { FiClock, FiSearch, FiCalendar, FiAward, FiMessageSquare, FiFileText } from 'react-icons/fi';
 
-// Types
+// Full User interface based on backend model
 interface Skill {
   name: string;
   level: string;
@@ -59,13 +60,14 @@ export default function Dashboard() {
     // Fetch user data and sessions
     const fetchData = async () => {
       try {
+        // Use Promise.all to fetch multiple resources in parallel
         const [userResponse, sessionsResponse] = await Promise.all([
           axiosInstance.get('/api/auth/me'),
           axiosInstance.get('/api/sessions/upcoming')
         ]);
         
         setUser(userResponse.data);
-        setSessions(sessionsResponse.data);
+        setSessions(sessionsResponse.data || []);
       } catch (err: any) {
         console.error('Error fetching dashboard data:', err);
         setError(err.response?.data?.message || 'Failed to load dashboard data');
@@ -129,35 +131,59 @@ export default function Dashboard() {
             </p>
           </div>
           <div className="mt-4 md:mt-0">
-            <div className="text-xl font-semibold">
-              {user.credits} Credits
+            <div className="text-xl font-semibold flex items-center">
+              <FiClock className="mr-2 text-indigo-600" />
+              {user.credits} Time Credits
             </div>
             <Link 
-              href="/profile" 
+              href="/time-credits" 
               className="mt-2 inline-block px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200"
             >
-              Edit Profile
+              Manage Credits
             </Link>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Quick Actions */}
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+          <div className="grid grid-cols-2 gap-3">
+            <Link href="/marketplace" className="flex flex-col items-center justify-center p-4 border rounded-lg hover:bg-gray-50">
+              <FiSearch className="h-6 w-6 text-indigo-600 mb-2" />
+              <span className="text-sm font-medium">Find Instructors</span>
+            </Link>
+            <Link href="/my-sessions" className="flex flex-col items-center justify-center p-4 border rounded-lg hover:bg-gray-50">
+              <FiCalendar className="h-6 w-6 text-indigo-600 mb-2" />
+              <span className="text-sm font-medium">My Sessions</span>
+            </Link>
+            <Link href="/my-skills" className="flex flex-col items-center justify-center p-4 border rounded-lg hover:bg-gray-50">
+              <FiAward className="h-6 w-6 text-indigo-600 mb-2" />
+              <span className="text-sm font-medium">My Skills</span>
+            </Link>
+            <Link href="/messages" className="flex flex-col items-center justify-center p-4 border rounded-lg hover:bg-gray-50">
+              <FiMessageSquare className="h-6 w-6 text-indigo-600 mb-2" />
+              <span className="text-sm font-medium">Messages</span>
+            </Link>
+          </div>
+        </div>
+
         {/* Skills Section */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">My Skills</h2>
             <Link 
-              href="/profile#skills" 
+              href="/my-skills" 
               className="text-sm text-indigo-600 hover:text-indigo-800"
             >
-              Edit
+              View All
             </Link>
           </div>
           
           {user.skills && user.skills.length > 0 ? (
             <ul className="space-y-2">
-              {user.skills.map((skill, index) => (
+              {user.skills.slice(0, 3).map((skill, index) => (
                 <li key={index} className="flex items-center justify-between">
                   <span className="font-medium">{skill.name}</span>
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 capitalize">
@@ -170,132 +196,70 @@ export default function Dashboard() {
                   </span>
                 </li>
               ))}
+              {user.skills.length > 3 && (
+                <li className="text-center text-sm text-indigo-600 mt-2">
+                  + {user.skills.length - 3} more skills
+                </li>
+              )}
             </ul>
           ) : (
-            <p className="text-gray-500">No skills added yet</p>
-          )}
-          
-          {user.role === 'learner' && (
-            <Link 
-              href="/marketplace" 
-              className="mt-4 block w-full text-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-            >
-              Find Instructors
-            </Link>
+            <div className="text-center py-4">
+              <p className="text-gray-500 mb-4">No skills added yet</p>
+              <Link 
+                href="/my-skills" 
+                className="inline-block px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+              >
+                Add Skills
+              </Link>
+            </div>
           )}
         </div>
 
-        {/* Availability Section (for instructors) */}
-        {user.role === 'instructor' && user.availability && (
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">My Availability</h2>
-              <Link 
-                href="/profile#availability" 
-                className="text-sm text-indigo-600 hover:text-indigo-800"
-              >
-                Edit
-              </Link>
-            </div>
-            
-            <div className="space-y-3">
-              {Object.entries(user.availability).map(([day, hours]) => 
-                hours && hours.length > 0 ? (
-                  <div key={day} className="flex flex-col">
-                    <span className="font-medium capitalize">{day}</span>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {hours.map((hour) => (
-                        <span 
-                          key={`${day}-${hour}`}
-                          className="px-2 py-1 text-xs bg-gray-100 rounded"
-                        >
-                          {hour}:00
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ) : null
-              )}
-            </div>
-            
-            {Object.values(user.availability).every(hours => !hours || hours.length === 0) && (
-              <p className="text-gray-500">No availability set</p>
-            )}
-          </div>
-        )}
-
         {/* Upcoming Sessions */}
-        <div className="bg-white rounded-lg shadow-md p-6 md:col-span-1">
-          <h2 className="text-xl font-semibold mb-4">Upcoming Sessions</h2>
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Upcoming Sessions</h2>
+            <Link 
+              href="/my-sessions" 
+              className="text-sm text-indigo-600 hover:text-indigo-800"
+            >
+              View All
+            </Link>
+          </div>
           
-          {sessions.length > 0 ? (
-            <div className="space-y-4">
-              {sessions.slice(0, 3).map((session) => {
-                const sessionDate = new Date(session.startTime);
-                const isInstructor = user._id === session.instructor._id;
-                const otherPerson = isInstructor ? session.learner : session.instructor;
-                
-                return (
-                  <div key={session._id} className="border rounded-lg p-4">
-                    <div className="flex justify-between">
-                      <div>
-                        <h3 className="font-medium">{session.skill}</h3>
-                        <p className="text-sm text-gray-600">
-                          with {otherPerson.name}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-sm font-medium">
-                          {sessionDate.toLocaleDateString()}
-                        </div>
-                        <div className="text-sm text-gray-600">
-                          {sessionDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                        </div>
-                      </div>
+          {sessions && sessions.length > 0 ? (
+            <div className="space-y-3">
+              {sessions.slice(0, 2).map((session) => (
+                <Link 
+                  key={session._id} 
+                  href={`/sessions/${session._id}`}
+                  className="block p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
+                >
+                  <div className="flex justify-between">
+                    <div>
+                      <h3 className="font-medium">{session.skill}</h3>
+                      <p className="text-sm text-gray-600">
+                        {new Date(session.startTime).toLocaleDateString()} • {session.duration} min
+                      </p>
                     </div>
-                    
-                    <div className="mt-3 flex justify-between items-center">
+                    <div>
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 capitalize">
                         {session.status}
                       </span>
-                      
-                      {session.status === 'confirmed' && (
-                        <Link 
-                          href={`/session/${session._id}`}
-                          className="px-3 py-1 text-sm text-indigo-600 border border-indigo-600 rounded-md hover:bg-indigo-50"
-                        >
-                          Join
-                        </Link>
-                      )}
                     </div>
                   </div>
-                );
-              })}
-              
-              {sessions.length > 3 && (
-                <Link 
-                  href="/sessions" 
-                  className="block text-center text-indigo-600 hover:text-indigo-800 mt-2"
-                >
-                  View all ({sessions.length}) sessions
                 </Link>
-              )}
+              ))}
             </div>
           ) : (
-            <div className="text-center py-6">
+            <div className="text-center py-4">
               <p className="text-gray-500 mb-4">No upcoming sessions</p>
-              {user.role === 'learner' ? (
-                <Link 
-                  href="/marketplace" 
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-                >
-                  Find Instructors
-                </Link>
-              ) : (
-                <p className="text-sm text-gray-500">
-                  Learners will book sessions once they find your profile
-                </p>
-              )}
+              <Link 
+                href="/marketplace" 
+                className="inline-block px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+              >
+                Find Instructors
+              </Link>
             </div>
           )}
         </div>

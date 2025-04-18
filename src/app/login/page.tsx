@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import axiosInstance from '@/lib/api/axios';
+import { loginUser, isAuthenticated } from '@/lib/auth';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -21,27 +21,42 @@ export default function LoginPage() {
     });
   };
 
+  // Don't automatically redirect - only check authentication status
+  useEffect(() => {
+    // Just check if user is authenticated but don't redirect
+    const isUserAuthenticated = isAuthenticated();
+    if (isUserAuthenticated) {
+      console.log('User is already authenticated, but waiting for explicit login');
+    }
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate that both email and password are provided
+    if (!formData.email || !formData.password) {
+      setError('Please provide both email and password');
+      return;
+    }
+    
     setLoading(true);
     setError('');
     
     try {
       console.log('Attempting login with:', formData.email);
       
-      // Use the correct API path
-      const res = await axiosInstance.post('/api/auth/login', formData);
+      // Use our auth utility to login
+      await loginUser(formData);
       
-      console.log('Login successful:', res.data);
+      console.log('Login successful');
       
-      // Store token in localStorage
-      localStorage.setItem('token', res.data.token);
+      // Keep loading state active while we redirect
+      // This shows the user something is happening
       
-      // Set axios default header for future requests
-      axiosInstance.defaults.headers.common['x-auth-token'] = res.data.token;
-      
-      // Redirect to dashboard
-      router.push('/dashboard');
+      // Redirect after a short delay to show the success state
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 1200);
     } catch (err: any) {
       console.error('Login error:', err);
       
@@ -126,9 +141,24 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
             >
-              {loading ? 'Signing in...' : 'Sign in'}
+              {loading ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Signing in...
+                </span>
+              ) : (
+                <span className="flex items-center justify-center">
+                  <svg className="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                  </svg>
+                  Sign in
+                </span>
+              )}
             </button>
           </div>
         </form>
