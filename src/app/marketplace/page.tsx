@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import axiosInstance from '@/lib/api/axios';
 import Link from 'next/link';
+import { isAuthenticated, initAuth } from '@/lib/auth';
 
 // Types
 interface Skill {
@@ -39,19 +40,19 @@ export default function MarketplacePage() {
   const [availableSkills, setAvailableSkills] = useState<string[]>([]);
   
   useEffect(() => {
-    // Check if token exists
-    const token = localStorage.getItem('token');
-    if (!token) {
+    // Check if user is authenticated
+    if (!isAuthenticated()) {
       router.push('/login');
       return;
     }
-
-    // Set default auth header
-    axiosInstance.defaults.headers.common['x-auth-token'] = token;
+    
+    // Make sure auth headers are set
+    initAuth();
 
     // Fetch instructors
     const fetchInstructors = async () => {
       try {
+        // Use the new search endpoint we created
         const res = await axiosInstance.get('/api/search');
         setInstructors(res.data);
         
@@ -70,7 +71,6 @@ export default function MarketplacePage() {
         
         // Redirect to login if unauthorized
         if (err.response?.status === 401) {
-          localStorage.removeItem('token');
           router.push('/login');
         }
       } finally {

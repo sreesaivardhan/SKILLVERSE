@@ -69,6 +69,7 @@ app.use('/api/sessions', require('./routes/sessionRoutes'));
 app.use('/api/ai', require('./routes/aiRoutes'));
 app.use('/api/skills', require('./routes/skills'));
 app.use('/api/webrtc', require('./routes/webrtcRoutes'));
+app.use('/api/search', require('./routes/searchRoutes'));
 
 // Setup WebRTC socket handlers
 require('./controllers/webrtcController').setupSocketHandlers(io);
