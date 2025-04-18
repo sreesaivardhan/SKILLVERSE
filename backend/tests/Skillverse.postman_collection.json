@@ -1,0 +1,219 @@
+{
+  "info": {
+    "_postman_id": "unique-id",
+    "name": "Skillverse API Tests",
+    "description": "API tests for the Skillverse platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"name\": \"Test User\",\n\t\"email\": \"test@example.com\",\n\t\"password\": \"password123\",\n\t\"role\": \"learner\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/register",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"email\": \"test@example.com\",\n\t\"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/login",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-auth-token",
+                "value": "{{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/me",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sessions",
+      "item": [
+        {
+          "name": "Book Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-auth-token",
+                "value": "{{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"instructorId\": \"{{instructorId}}\",\n\t\"skill\": \"JavaScript\",\n\t\"startTime\": \"2025-04-20T10:00:00Z\",\n\t\"duration\": 60\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/sessions/book",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "sessions", "book"]
+            }
+          }
+        },
+        {
+          "name": "Confirm Session",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "x-auth-token",
+                "value": "{{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/sessions/{{sessionId}}/confirm",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "sessions", "{{sessionId}}", "confirm"]
+            }
+          }
+        },
+        {
+          "name": "Get Upcoming Sessions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-auth-token",
+                "value": "{{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/sessions/upcoming",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "sessions", "upcoming"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI Features",
+      "item": [
+        {
+          "name": "Get Skill Recommendations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-auth-token",
+                "value": "{{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/ai/skills/recommended",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "ai", "skills", "recommended"]
+            }
+          }
+        },
+        {
+          "name": "Get Instructor Recommendations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-auth-token",
+                "value": "{{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/ai/instructors/recommended/{{skillId}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "ai", "instructors", "recommended", "{{skillId}}"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:5001",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "instructorId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sessionId",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
