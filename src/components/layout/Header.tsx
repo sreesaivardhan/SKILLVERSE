@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { FiMenu, FiX, FiSun, FiMoon, FiSearch, FiBell, FiUser } from 'react-icons/fi';
@@ -77,7 +78,14 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo and brand */}
           <div className="flex items-center">
-            <Link href={isAuthenticated ? '/dashboard' : '/'} className="flex items-center">
+            <Link href={isAuthenticated ? '/dashboard' : '/'} className="flex items-center space-x-2">
+              <Image 
+                src="/skillverse-logo.png" 
+                alt="SkillVerse Logo" 
+                width={36} 
+                height={36} 
+                className="h-8 w-auto"
+              />
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 SKILLVERSE
               </span>
@@ -194,9 +202,18 @@ const Header = () => {
           {/* Menu panel */}
           <div className="fixed inset-y-0 right-0 max-w-xs w-full bg-white dark:bg-gray-900 shadow-xl transform transition-transform duration-300 ease-in-out mobile-menu-container">
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                SKILLVERSE
-              </span>
+              <div className="flex items-center space-x-2">
+                <Image 
+                  src="/skillverse-logo.png" 
+                  alt="SkillVerse Logo" 
+                  width={32} 
+                  height={32} 
+                  className="h-7 w-auto"
+                />
+                <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  SKILLVERSE
+                </span>
+              </div>
               <button
                 onClick={() => setIsMenuOpen(false)}
                 className="p-2 rounded-md text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
