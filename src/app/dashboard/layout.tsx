@@ -74,8 +74,8 @@ export default function DashboardLayout({
   // Full menu items based on backend features
   const menuItems = [
     { name: 'Dashboard', href: '/dashboard', icon: FiHome },
-    { name: 'Find Instructor', href: '/marketplace', icon: FiSearch },
-    { name: 'Time Credit System', href: '/time-credits', icon: FiClock },
+    { name: 'Find Instructors', href: '/marketplace', icon: FiSearch },
+    { name: 'Time Credits', href: '/time-credits', icon: FiClock },
     { name: 'My Sessions', href: '/my-sessions', icon: FiCalendar },
     { name: 'My Skills', href: '/my-skills', icon: FiAward },
     { name: 'Assessments', href: '/assessments', icon: FiFileText },
@@ -102,17 +102,27 @@ export default function DashboardLayout({
               </Link>
             </div>
             <div className="hidden md:flex md:items-center md:space-x-6">
-              <Link href="/marketplace" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">
-                Find Instructors
-              </Link>
-              <Link href="/how-it-works" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">
-                How It Works
-              </Link>
-              <div className="relative">
+              <div className="flex space-x-6">
+                {menuItems.slice(1, 3).map((item) => (
+                  <Link 
+                    key={item.name}
+                    href={item.href} 
+                    className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center"
+                  >
+                    <item.icon className="mr-1 h-4 w-4" />
+                    {item.name}
+                  </Link>
+                ))}
+                <Link href="/how-it-works" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center">
+                  <FiHelpCircle className="mr-1 h-4 w-4" />
+                  How It Works
+                </Link>
+              </div>
+              <div className="relative ml-3">
                 <div className="flex items-center">
                   <button 
                     onClick={handleLogout}
-                    className="ml-4 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 flex items-center"
+                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 flex items-center"
                   >
                     <svg className="mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -167,15 +177,30 @@ export default function DashboardLayout({
             </div>
             <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
               <div className="flex items-center justify-center flex-shrink-0 px-4 mb-5">
-                <Image
-                  src="/logo.png"
-                  alt="SkillVerse Logo"
-                  width={150}
-                  height={60}
-                  className="object-contain"
-                />
+                <div className="relative h-12">
+                  <Image
+                    src="/logo.png"
+                    alt="SkillVerse Logo"
+                    width={150}
+                    height={48}
+                    className="object-contain"
+                  />
+                </div>
               </div>
-              <nav className="mt-5 px-2 space-y-1">
+              <div className="flex items-center justify-center mb-6">
+                <div className="h-10 w-10 rounded-full bg-indigo-500 flex items-center justify-center text-white mr-3">
+                  {user?.name.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {user?.name}
+                  </p>
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400 capitalize">
+                    {user?.role}
+                  </p>
+                </div>
+              </div>
+              <nav className="px-2 space-y-1">
                 {menuItems.map((item) => (
                   <Link
                     key={item.name}
@@ -187,24 +212,17 @@ export default function DashboardLayout({
                     {item.name}
                   </Link>
                 ))}
+                <Link
+                  href="/how-it-works"
+                  className="group flex items-center px-2 py-2 text-base font-medium rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                  onClick={toggleMobileMenu}
+                >
+                  <FiHelpCircle className="mr-4 h-5 w-5 text-gray-500 dark:text-gray-400" />
+                  How It Works
+                </Link>
               </nav>
             </div>
-            <div className="flex-shrink-0 flex flex-col border-t border-gray-200 dark:border-gray-700 p-4">
-              <Link href="/profile" className="flex-shrink-0 w-full group block mb-4" onClick={toggleMobileMenu}>
-                <div className="flex items-center">
-                  <div className="h-9 w-9 rounded-full bg-indigo-500 flex items-center justify-center text-white">
-                    {user?.name.charAt(0).toUpperCase()}
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      {user?.name}
-                    </p>
-                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 capitalize">
-                      {user?.role}
-                    </p>
-                  </div>
-                </div>
-              </Link>
+            <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 p-4">
               <button 
                 onClick={handleLogout}
                 className="w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 flex items-center justify-center"

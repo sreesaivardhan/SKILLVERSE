@@ -9,6 +9,7 @@ import Sidebar from './Sidebar';
 import { RootState } from '@/lib/redux/store';
 import { loadUser } from '@/lib/redux/slices/authSlice';
 import { AppDispatch } from '@/lib/redux/store';
+import { AuthProvider } from '@/lib/contexts/AuthContext';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -30,28 +31,32 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   }, [dispatch, token]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
-      <Header />
-      
-      <div className="flex flex-1 pt-16">
-        {/* Sidebar for dashboard pages */}
-        {isDashboardPage && <Sidebar />}
+    <AuthProvider>
+      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
+        <Header />
         
-        {/* Main content */}
-        <main 
-          className={`flex-1 transition-all duration-300 ${
-            isDashboardPage ? 'lg:ml-64' : ''
-          } ${isDashboardPage && sidebarOpen ? 'ml-64' : ''}`}
-        >
-          <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
-            {children}
-          </div>
-        </main>
+        <div className="flex flex-1 pt-16">
+          {/* Sidebar for dashboard pages */}
+          {isDashboardPage && (
+            <div className={`fixed inset-y-0 left-0 z-30 w-64 pt-16 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+              <Sidebar />
+            </div>
+          )}
+          
+          {/* Main content */}
+          <main 
+            className={`flex-1 transition-all duration-300 ${isDashboardPage ? 'lg:pl-64' : ''}`}
+          >
+            <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+              {children}
+            </div>
+          </main>
+        </div>
+        
+        {/* Only show footer on non-dashboard pages */}
+        {!isDashboardPage && <Footer />}
       </div>
-      
-      {/* Only show footer on non-dashboard pages */}
-      {!isDashboardPage && <Footer />}
-    </div>
+    </AuthProvider>
   );
 };
 

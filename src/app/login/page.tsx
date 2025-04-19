@@ -94,11 +94,16 @@ export default function LoginPage() {
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-bold text-gray-900">Sign in to your account</h2>
           <p className="mt-2 text-sm text-gray-600">
-            Or{' '}
-            <Link href="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
-              create a new account
-            </Link>
+            Don't have an account yet?
           </p>
+          <div className="mt-3">
+            <Link 
+              href="/register" 
+              className="w-full flex justify-center py-2 px-4 border border-indigo-600 rounded-md shadow-sm text-sm font-medium text-indigo-600 bg-white hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Create Account
+            </Link>
+          </div>
         </div>
         
         {error && (
