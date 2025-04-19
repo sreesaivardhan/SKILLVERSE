@@ -23,14 +23,14 @@ const SessionSchema = new mongoose.Schema({
     type: Number, // Duration in minutes
     required: true
   },
-  credits: {
+  creditCost: {
     type: Number,
     required: true
   },
   status: {
     type: String,
-    enum: ['pending', 'confirmed', 'completed', 'cancelled'],
-    default: 'pending'
+    enum: ['scheduled', 'ongoing', 'completed', 'cancelled'],
+    default: 'scheduled'
   },
   meetingLink: {
     type: String
